@@ -1,528 +1,186 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>디지털 정보 격차와 경제적 불평등</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>기본값은 선택을 얼마나 바꿀까? | 탐구 발표</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      background: #fff;
-      color: #0b0b0b;
-      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-      word-break: keep-all;
-      letter-spacing: 0;
-    }
-
-    body::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    body::-webkit-scrollbar-track {
-      background: #f0f0ed;
-    }
-
-    body::-webkit-scrollbar-thumb {
-      background: #111;
-      border: 3px solid #f0f0ed;
-      border-radius: 999px;
-    }
-
-    .deck {
-      width: 100vw;
-    }
-
-    .slide {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 82px 96px;
-      background: #f7f7f4;
-      overflow: hidden;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
-      --photo: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80");
-    }
-
-    .slide::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(247, 247, 244, 0.98) 0%, rgba(247, 247, 244, 0.9) 38%, rgba(247, 247, 244, 0.5) 68%, rgba(247, 247, 244, 0.2) 100%),
-        var(--photo) center / cover no-repeat;
-      filter: grayscale(1) contrast(1.05);
-      opacity: 0.18;
-      pointer-events: none;
-      transform: scale(1.04);
-      transition: opacity 920ms ease, transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .slide.active::before {
-      opacity: 0.23;
-      transform: scale(1);
-    }
-
-    .slide:nth-child(1) { --photo: url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(2) { --photo: url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(3) { --photo: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(4) { --photo: url("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(5) { --photo: url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(6) { --photo: url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(7) { --photo: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(8) { --photo: url("https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1800&q=80"); }
-    .slide:nth-child(9) { --photo: url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80"); }
-
-    .cover-slide::before {
-      background:
-        linear-gradient(90deg, rgba(247, 247, 244, 0.99) 0%, rgba(247, 247, 244, 0.94) 46%, rgba(247, 247, 244, 0.54) 78%, rgba(247, 247, 244, 0.28) 100%),
-        var(--photo) center / cover no-repeat;
-      opacity: 0.2;
-    }
-
-    .inner {
-      position: relative;
-      z-index: 1;
-      width: min(1160px, 100%);
-      opacity: 0;
-      transform: translateY(42px);
-      transition:
-        opacity 620ms ease,
-        transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .slide.active .inner {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .slide.leaving .inner {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-
-    h1,
-    h2,
-    p {
-      margin: 0;
-    }
-
-    .cover {
-      align-self: center;
-      justify-self: start;
-      width: min(1120px, 100%);
-      margin-left: clamp(10px, 2.5vw, 42px);
-    }
-
-    h1 {
-      font-size: clamp(90px, 9.6vw, 150px);
-      font-weight: 760;
-      line-height: 1.01;
-      letter-spacing: -0.064em;
-    }
-
-    .slide.active h1,
-    .slide.active h2 {
-      animation: titleIn 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 0.78fr 1.22fr;
-      gap: 88px;
-      align-items: center;
-    }
-
-    .layout.reverse {
-      grid-template-columns: 1.12fr 0.88fr;
-    }
-
-    h2 {
-      font-size: clamp(58px, 5.65vw, 88px);
-      font-weight: 780;
-      line-height: 1.05;
-      letter-spacing: -0.052em;
-    }
-
-    .text {
-      position: relative;
-      padding: 34px 0 0 34px;
-      border-left: 3px solid #111;
-      transform-origin: left top;
-    }
-
-    .slide.active .text {
-      animation: textBlockIn 720ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
-    }
-
-    .text p {
-      color: #222;
-      font-size: clamp(27px, 2.35vw, 36px);
-      font-weight: 560;
-      line-height: 1.52;
-    }
-
-    .text p + p {
-      margin-top: 24px;
-    }
-
-    .slide.active .text p {
-      animation: paragraphIn 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .slide.active .text p:nth-child(1) { animation-delay: 180ms; }
-    .slide.active .text p:nth-child(2) { animation-delay: 260ms; }
-    .slide.active .text p:nth-child(3) { animation-delay: 340ms; }
-
-    strong {
-      color: #000;
-      font-weight: 850;
-    }
-
-    .contents {
-      display: grid;
-      grid-template-columns: 0.65fr 1.35fr;
-      gap: 92px;
-      align-items: center;
-    }
-
-    .list {
-      border-top: 3px solid #111;
-      border-bottom: 3px solid #111;
-    }
-
-    .list-item {
-      min-height: 78px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #d3d3d3;
-      color: #111;
-      font-size: clamp(25px, 2.3vw, 36px);
-      font-weight: 680;
-      line-height: 1.25;
-      opacity: 0;
-      transform: translateY(18px);
-    }
-
-    .list-item:last-child {
-      border-bottom: 0;
-    }
-
-    .slide.active .list-item {
-      animation: rise 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    .slide.active .list-item:nth-child(1) { animation-delay: 70ms; }
-    .slide.active .list-item:nth-child(2) { animation-delay: 120ms; }
-    .slide.active .list-item:nth-child(3) { animation-delay: 170ms; }
-    .slide.active .list-item:nth-child(4) { animation-delay: 220ms; }
-    .slide.active .list-item:nth-child(5) { animation-delay: 270ms; }
-    .slide.active .list-item:nth-child(6) { animation-delay: 320ms; }
-
-    .quote {
-      width: min(1030px, 100%);
-      margin-inline: auto;
-    }
-
-    .quote h2 {
-      max-width: 950px;
-    }
-
-    .quote .text {
-      margin-top: 52px;
-    }
-
-    .center-title {
-      text-align: center;
-    }
-
-    .center-title .text {
-      text-align: left;
-      margin-left: auto;
-      margin-right: auto;
-      width: min(920px, 100%);
-    }
-
-    @keyframes rise {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes titleIn {
-      from {
-        opacity: 0;
-        transform: translateY(42px);
-        clip-path: inset(18% 0 22% 0);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-        clip-path: inset(0 0 0 0);
-      }
-    }
-
-    @keyframes textBlockIn {
-      from {
-        opacity: 0;
-        transform: translateX(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes paragraphIn {
-      from {
-        opacity: 0;
-        transform: translateY(22px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 1200px) {
-      .slide {
-        padding: 72px 76px;
-      }
-
-      h1 {
-        font-size: 108px;
-      }
-
-      h2 {
-        font-size: 68px;
-      }
-
-      .layout,
-      .layout.reverse,
-      .contents {
-        gap: 58px;
-      }
-
-      .text p,
-      .list-item {
-        font-size: 28px;
-      }
-    }
+    :root { color-scheme: light; --paper:#f7f7f4; --ink:#111; --muted:#62625f; --line:#d3d3ce; }
+    * { box-sizing:border-box }
+    html,body { margin:0; width:100%; min-height:100%; background:#fff; color:var(--ink); font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif; -webkit-font-smoothing:antialiased }
+    body { overflow-x:hidden; overflow-y:auto; scroll-snap-type:y mandatory; scroll-behavior:smooth; word-break:keep-all }
+    .deck { width:100vw }
+    .slide { position:relative; width:100vw; min-height:100svh; display:grid; place-items:center; padding:82px 9vw; overflow:hidden; background:var(--paper); scroll-snap-align:start; scroll-snap-stop:always; isolation:isolate; --photo:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") }
+    .slide::before { content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(247,247,244,.98) 0%,rgba(247,247,244,.9) 38%,rgba(247,247,244,.5) 68%,rgba(247,247,244,.2) 100%),var(--photo) center/cover no-repeat; filter:grayscale(1) contrast(1.05); opacity:.18; transform:scale(1.03); transition:opacity .8s,transform 1s }
+    .slide.active::before { opacity:.23; transform:scale(1) }
+    .slide:nth-child(1){--photo:url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(2){--photo:url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(3){--photo:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(4){--photo:url("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(5){--photo:url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(6){--photo:url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=80")}
+    .slide:nth-child(7){--photo:url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80")}
+    .cover-slide::before { background:linear-gradient(90deg,rgba(247,247,244,.99) 0%,rgba(247,247,244,.94) 46%,rgba(247,247,244,.54) 78%,rgba(247,247,244,.28) 100%),var(--photo) center/cover no-repeat; opacity:.2 }
+    .inner { width:min(1160px,100%); position:relative; opacity:0; transform:translateY(24px); transition:opacity .55s ease,transform .7s cubic-bezier(.22,1,.36,1) }
+    .slide.active .inner { opacity:1; transform:translateY(0) }
+    .cover { width:min(1120px,100%); justify-self:start }
+    .eyebrow { margin:0 0 28px; color:var(--muted); font-size:clamp(15px,1.25vw,19px); font-weight:700; letter-spacing:.12em; text-transform:uppercase }
+    h1,h2,p { margin:0 }
+    h1 { font-size:clamp(74px,9vw,142px); font-weight:780; line-height:1.04; letter-spacing:-.065em }
+    .cover-sub { margin-top:32px; color:#333; font-size:clamp(21px,2vw,30px); font-weight:550 }
+    .cover-meta { margin-top:56px; color:var(--muted); font-size:17px; line-height:1.8 }
+    .layout { display:grid; grid-template-columns:.82fr 1.18fr; gap:clamp(38px,7vw,92px); align-items:center }
+    .layout.reverse { grid-template-columns:1.18fr .82fr }
+    h2 { font-size:clamp(52px,5.5vw,82px); font-weight:780; line-height:1.08; letter-spacing:-.055em }
+    .text { padding:30px 0 0 30px; border-left:3px solid var(--ink) }
+    .text p { color:#222; font-size:clamp(22px,2.05vw,31px); font-weight:540; line-height:1.55 }
+    .text p+p { margin-top:20px }
+    strong { color:#000; font-weight:800 }
+    .tag { display:inline-block; margin-bottom:16px; padding:7px 12px; border:1px solid #aaa; border-radius:99px; color:#444; font-size:14px; font-weight:700; letter-spacing:.03em }
+    .examples { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:26px }
+    .example { padding:22px 24px; border-top:2px solid #111; background:rgba(255,255,255,.45) }
+    .example b { display:block; margin-bottom:10px; font-size:20px }
+    .example p { color:#333; font-size:18px; line-height:1.5 }
+    .list { border-top:3px solid #111; border-bottom:3px solid #111 }
+    .list-item { display:flex; align-items:center; gap:20px; min-height:70px; border-bottom:1px solid var(--line); font-size:clamp(20px,1.9vw,28px); font-weight:680; line-height:1.3 }
+    .list-item:last-child { border-bottom:0 }
+    .num { color:#777; font-variant-numeric:tabular-nums; font-size:.72em }
+    .quote { width:min(1080px,100%) }
+    .quote .text { margin-top:38px }
+    .quote-mark { color:#666; font-size:clamp(22px,2.1vw,30px); font-weight:600; line-height:1.65 }
+    .note { margin-top:32px; color:#555; font-size:15px; line-height:1.6 }
+    .controls { position:fixed; z-index:5; right:28px; bottom:24px; display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid rgba(0,0,0,.12); border-radius:999px; background:rgba(247,247,244,.88); backdrop-filter:blur(10px) }
+    .controls button { width:38px; height:38px; border:0; border-radius:50%; background:#111; color:#fff; font-size:18px; cursor:pointer }
+    .controls button:disabled { opacity:.35; cursor:default }
+    .counter { min-width:54px; text-align:center; color:#333; font-size:14px; font-weight:700; font-variant-numeric:tabular-nums }
+    .progress { position:fixed; z-index:6; inset:0 auto auto 0; height:3px; width:0; background:#111; transition:width .35s ease }
+    @media(max-width:850px) { .slide { padding:64px 8vw; min-height:100svh } .layout,.layout.reverse { grid-template-columns:1fr; gap:32px } .layout.reverse .text { order:2 } h2 { max-width:14ch } .text { padding:22px 0 0 22px } .examples { gap:12px } .example { padding:17px } .example p { font-size:16px } }
+    @media(max-width:540px) { .slide { padding:58px 7vw 88px } h1 { font-size:clamp(58px,15vw,82px) } h2 { font-size:clamp(46px,12vw,62px) } .text p { font-size:20px } .examples { grid-template-columns:1fr } .cover-meta { margin-top:38px } .controls { right:14px; bottom:14px } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important } }
   </style>
 </head>
 <body>
-  <main class="deck" id="deck">
-    <section class="slide cover-slide active">
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <main class="deck" id="deck" aria-label="기본값 효과 탐구 발표">
+    <section class="slide cover-slide active" aria-label="1장 표지">
       <div class="inner cover">
-        <h1>디지털 정보 격차와<br>경제적 불평등</h1>
+        <p class="eyebrow">탐구 발표 · 넛지 파이널 에디션</p>
+        <h1>기본값은<br>선택을 얼마나 바꿀까?</h1>
+        <p class="cover-sub">기본값의 효과와 정당한 개입의 조건</p>
+        <p class="cover-meta">탐구 질문: 기본값은 사람의 선택을 얼마나 바꾸며,<br>그 개입은 언제 정당할까?</p>
       </div>
     </section>
-
-    <section class="slide">
-      <div class="inner contents">
-        <h2>목차</h2>
-        <div class="list">
-          <div class="list-item">주제 선정 이유</div>
-          <div class="list-item">경제적 불평등이 발생하는 원인</div>
-          <div class="list-item">경제적 불평등의 윤리적 쟁점</div>
-          <div class="list-item">경제적 불평등에 대한 찬반 관점</div>
-          <div class="list-item">해결 방안</div>
-          <div class="list-item">결론 및 내 생각</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="slide">
+    <section class="slide" aria-label="2장 탐구 질문">
       <div class="inner layout">
-        <h2>주제 선정 이유</h2>
+        <div><p class="eyebrow">01 / 탐구의 출발점</p><h2>왜 기본값을<br>살펴볼까?</h2></div>
         <div class="text">
-          <p>현대사회에서는 <strong>컴퓨터, 인터넷, AI</strong> 같은 디지털 기술을 잘 활용하는 능력이 중요해지고 있다.</p>
-          <p>하지만 사람마다 디지털 기기 보유, 인터넷 환경, 정보 활용 능력에 차이가 있어 교육과 취업 기회에도 차이가 생긴다.</p>
-          <p>그래서 디지털 정보 격차가 경제적 불평등으로 이어질 수 있다고 생각해 이 주제를 선정했다.</p>
+          <p>우리는 온라인 가입, 개인정보 설정, 연금 가입처럼 매일 여러 선택을 한다. 그런데 미리 정해진 항목은 얼마나 자주 그대로 둘까?</p>
+          <p>이 발표는 『넛지 파이널 에디션』의 선택 설계 개념을 바탕으로 <strong>기본값 효과</strong>를 살펴본다.</p>
+          <p>핵심 질문은 기본값이 선택을 바꾸는 원리와 그 영향력을 사용하는 일이 정당해지는 조건이다.</p>
         </div>
       </div>
     </section>
-
-    <section class="slide">
+    <section class="slide" aria-label="3장 기본값의 작동 원리">
+      <div class="inner">
+        <p class="eyebrow">02 / 작동 원리</p><h2>기본값은 왜<br>강한가?</h2>
+        <div class="examples">
+          <article class="example"><span class="tag">기본값 효과</span><b>자동으로 정해진 선택</b><p>아무것도 바꾸지 않을 때 적용되는 옵션을 그대로 두는 경향이 있다. 예를 들어 퇴직연금 자동 가입은 가입 절차의 기본 설정을 바꿔 참여를 쉽게 할 수 있다.</p></article>
+          <article class="example"><span class="tag">선택 환경</span><b>바꾸지 않는 선택</b><p>기본값을 바꾸려면 추가 행동이 필요하다. 바쁜 사람은 설정을 비교하거나 변경하는 수고를 미루고 현재 상태를 유지할 수 있다.</p></article>
+        </div>
+        <p class="note">기본값을 유지했다고 해서 그것이 반드시 개인의 선호를 뜻하는 것은 아니다.</p>
+      </div>
+    </section>
+    <section class="slide" aria-label="4장 사례와 해석">
       <div class="inner layout reverse">
         <div class="text">
-          <p>경제적 불평등은 소득 차이, 교육 기회 차이, 가정환경, 자산 차이 등으로 발생한다.</p>
-          <p>특히 현대사회에서는 <strong>디지털 기술을 활용할 수 있는 능력</strong>도 중요한 원인이 된다.</p>
-          <p>정보를 잘 찾고 활용하는 사람은 더 좋은 교육, 취업, 창업 기회를 얻을 수 있지만, 그렇지 못한 사람은 경쟁에서 불리해질 수 있다.</p>
+          <p>책에서 다루는 저축 사례 가운데 하나는 근로자가 직접 가입하던 방식에서 자동 가입 방식으로 기본 설정을 바꾸는 것이다.</p>
+          <p>가입을 기본값으로 두면 가입을 미루거나 절차를 놓치는 사람이 줄어들 수 있다.</p>
+          <p>저자들은 이런 선택 설계가 저축 참여를 높일 수 있다고 설명한다. 다만 효과의 크기는 제도와 사람에 따라 다르다.</p>
         </div>
-        <h2>경제적 불평등이 발생하는 원인</h2>
+        <div><p class="eyebrow">03 / 기본값의 영향</p><h2>퇴직연금<br>자동 가입</h2></div>
       </div>
     </section>
-
-    <section class="slide">
-      <div class="inner quote center-title">
-        <h2>경제적 불평등의 윤리적 쟁점</h2>
-        <div class="text">
-          <p>경제적 불평등의 가장 큰 윤리적 쟁점은 <strong>기회가 모두에게 공정하게 주어지는가</strong>이다.</p>
-          <p>출발선이 다른 상태에서 개인의 노력만 강조하는 것은 공정하지 않을 수 있다.</p>
-          <p>특히 디지털 정보 격차로 인해 일부 사람만 더 많은 기회를 얻는다면, 사회 전체의 불평등이 더 심해질 수 있다.</p>
+    <section class="slide" aria-label="5장 효과와 한계">
+      <div class="inner">
+        <p class="eyebrow">04 / 사례를 평가하기</p><h2>효과는 무엇일까?</h2>
+        <div class="layout" style="grid-template-columns:.72fr 1.28fr;gap:54px;margin-top:34px">
+          <p class="quote-mark">자동 가입은 가입의 번거로움을 줄여 저축을 돕는다. 그러나 사람마다 재정 상황과 선호가 다르므로 모두에게 같은 기본값이 최선이라고 단정할 수는 없다.</p>
+          <div class="list">
+            <div class="list-item"><span class="num">01</span>가입 절차를 줄여 참여 장벽을 낮춤</div>
+            <div class="list-item"><span class="num">02</span>저축을 미루거나 잊는 상황을 줄일 수 있음</div>
+            <div class="list-item"><span class="num">03</span>쉽게 변경할 수 있는 선택권이 필요</div>
+            <div class="list-item"><span class="num">04</span>개인 사정에 맞지 않는 가입은 부담이 될 수 있음</div>
+          </div>
         </div>
+        <p class="note">사례는 기본값이 행동에 영향을 줄 수 있음을 보여 준다. 이것만으로 모든 사람이 같은 이유로 가입하거나 저축이 늘었다고 단정할 수는 없다.</p>
       </div>
     </section>
-
-    <section class="slide">
+    <section class="slide" aria-label="6장 정당한 개입의 조건">
       <div class="inner quote">
-        <h2>찬성 관점</h2>
+        <p class="eyebrow">05 / 비판적으로 보기</p><h2>기본값은 언제<br>정당할까?</h2>
         <div class="text">
-          <p>경제적 불평등은 개인의 노력, 능력, 선택의 차이에서 생길 수 있으므로 어느 정도는 자연스럽다고 볼 수 있다.</p>
-          <p>또한 경쟁을 통해 사람들이 더 노력하게 만들고, 사회 발전의 동기가 될 수 있다.</p>
+          <p>기본값은 눈에 띄지 않게 선택에 영향을 주므로, 설계자의 목적을 확인할 수 있어야 한다.</p>
+          <p>개인의 상황에 맞지 않는 기본값을 강요하거나 변경을 어렵게 만들면 도움이 아니라 조작이 될 수 있다.</p>
+          <p>정당한 기본값이라면 목적과 근거를 알리고, 선택을 쉽게 바꿀 수 있게 하며, 누구에게 어떤 결과가 생기는지 점검해야 한다.</p>
         </div>
       </div>
     </section>
-
-    <section class="slide">
-      <div class="inner quote">
-        <h2>반대 관점</h2>
-        <div class="text">
-          <p>하지만 경제적 불평등이 지나치게 커지면 출발선 자체가 달라진다.</p>
-          <p>가난한 사람은 교육, 정보, 취업 기회에서 불리해지고, 부유한 사람은 더 많은 기회를 얻어 격차가 계속 커질 수 있다.</p>
-          <p>따라서 지나친 경제적 불평등은 공정성과 인간다운 삶을 해칠 수 있다.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="slide">
+    <section class="slide" aria-label="7장 탐구 결론">
       <div class="inner layout">
-        <h2>해결 방안</h2>
+        <div><p class="eyebrow">06 / 결론</p><h2>탐구를<br>마치며</h2></div>
         <div class="text">
-          <p>경제적 불평등을 줄이기 위해서는 교육 기회를 공정하게 제공해야 한다.</p>
-          <p>특히 디지털 정보 격차를 줄이기 위해 학교와 지역사회에서 <strong>컴퓨터, AI 교육</strong>을 확대할 필요가 있다.</p>
-          <p>또한 저소득층 학생에게 디지털 기기와 인터넷 환경을 지원하고, 누구나 쉽게 정보를 얻고 활용할 수 있도록 공공 서비스를 개선해야 한다.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="slide">
-      <div class="inner quote center-title">
-        <h2>결론 및 내 생각</h2>
-        <div class="text">
-          <p>경제적 불평등은 개인의 노력만으로 설명하기 어렵고, 가정환경, 교육, 정보 접근성 등 여러 요인이 함께 작용해서 발생한다.</p>
-          <p>나는 경제적 불평등을 완전히 없애기는 어렵지만, 최소한 <strong>출발선의 차이</strong>는 줄여야 한다고 생각한다.</p>
-          <p>특히 디지털 기술이 중요한 시대인 만큼, 모든 사람이 정보를 공정하게 얻고 활용할 수 있도록 돕는 것이 필요하다.</p>
+          <p>기본값은 선택을 대신하지 않지만, 선택을 유지하는 쪽으로 사람을 이끌 수 있다. 그래서 사소해 보이는 설정도 실제 행동에 영향을 준다.</p>
+          <p>퇴직연금 자동 가입 사례는 기본값이 저축 참여를 돕는 가능성을 보여 준다. 동시에 개인의 선택과 상황을 존중하는 장치가 필요하다.</p>
+          <p>따라서 기본값은 투명하고 쉽게 거부할 수 있으며 이용자에게 이익이 되도록 설계될 때 정당성이 커진다고 결론 내렸다.</p>
         </div>
       </div>
     </section>
   </main>
-
+  <nav class="controls" aria-label="슬라이드 이동">
+    <button type="button" id="prev" aria-label="이전 슬라이드">↑</button>
+    <span class="counter" id="counter" aria-live="polite">01 / 07</span>
+    <button type="button" id="next" aria-label="다음 슬라이드">↓</button>
+  </nav>
   <script>
-    const slides = Array.from(document.querySelectorAll(".slide"));
-
+    const slides = [...document.querySelectorAll('.slide')];
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
     let index = 0;
-    let isAnimating = false;
-    let lastWheelTime = 0;
-    let wheelBuffer = 0;
-    let scrollFrame = 0;
-    const animationDelay = 850;
-    const wheelThreshold = 120;
-
-    function setActive(nextIndex, withLeaving = false) {
-      const boundedIndex = Math.max(0, Math.min(slides.length - 1, nextIndex));
-      if (boundedIndex === index) return;
-
-      const previous = index;
-      index = boundedIndex;
-
-      if (withLeaving) {
-        slides[previous].classList.add("leaving");
-      }
-
-      slides.forEach((slide, slideIndex) => {
-        slide.classList.toggle("active", slideIndex === index);
-      });
-
-      if (withLeaving) {
-        window.setTimeout(() => {
-          slides[previous].classList.remove("leaving");
-        }, animationDelay);
-      }
+    let locked = false;
+    function activate(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      prevButton.disabled = index === 0;
+      nextButton.disabled = index === slides.length - 1;
     }
-
-    function moveTo(nextIndex) {
-      if (nextIndex < 0 || nextIndex >= slides.length || nextIndex === index || isAnimating) return;
-
-      isAnimating = true;
-      wheelBuffer = 0;
-
-      setActive(nextIndex, true);
-      window.scrollTo({
-        top: slides[index].offsetTop,
-        behavior: "smooth"
-      });
-
-      window.setTimeout(() => {
-        isAnimating = false;
-      }, animationDelay);
+    function go(nextIndex) {
+      const bounded = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      if (bounded === index || locked) return;
+      locked = true;
+      activate(bounded);
+      slides[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => { locked = false; }, 650);
     }
-
-    function next() {
-      moveTo(index + 1);
-    }
-
-    function prev() {
-      moveTo(index - 1);
-    }
-
-    window.addEventListener("wheel", (event) => {
-      event.preventDefault();
-      const now = Date.now();
-
-      if (isAnimating || now - lastWheelTime < animationDelay) return;
-
-      wheelBuffer += event.deltaY;
-      if (Math.abs(wheelBuffer) < wheelThreshold) return;
-
-      lastWheelTime = now;
-      if (wheelBuffer > 0) next();
-      else prev();
-    }, { passive: false });
-
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " ") {
-        event.preventDefault();
-        next();
-      }
-
-      if (event.key === "ArrowUp" || event.key === "PageUp") {
-        event.preventDefault();
-        prev();
-      }
+    prevButton.addEventListener('click', () => go(index - 1));
+    nextButton.addEventListener('click', () => go(index + 1));
+    window.addEventListener('keydown', event => {
+      if (['ArrowDown', 'ArrowRight', 'PageDown'].includes(event.key)) { event.preventDefault(); go(index + 1); }
+      if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); go(index - 1); }
+      if (event.key === 'Home') { event.preventDefault(); go(0); }
+      if (event.key === 'End') { event.preventDefault(); go(slides.length - 1); }
     });
-
-    window.addEventListener("scroll", () => {
-      if (scrollFrame) return;
-
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-
-        if (isAnimating) return;
-
-        const nearest = Math.round(window.scrollY / window.innerHeight);
-        setActive(nearest);
-      });
-    }, { passive: true });
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible && visible.intersectionRatio > .5) activate(slides.indexOf(visible.target));
+    }, { threshold: [.5, .7] });
+    slides.forEach(slide => observer.observe(slide));
+    activate(0);
   </script>
 </body>
 </html>
+
